@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/paging-core.js")"></script>
+    <script type="text/javascript">
+        var paging_options = {
+            Container: 'holder',
+            GetUrl: siteRoot + 'home/GetPagedData',
+            Paging: {
+                
+            },
+            Search: {
+            
+            },
+            Entries: []
+        };
+    </script>        
+}
+
+<script id="template" type="x-tmpl-mustache">
+    <table class="table table-striped" id="holder">
+            <tr>
+                <th>Camp Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        {{#Entries}}
+            <tr>
+                <td>{{CampName}}</td>
+                <td>{{StartDate | date}}</td>
+                <td>{{EndDate | date}}</td>
+            </tr>
+        {{/Entries}}
+    </table>
+</script>
+
+<script id="pagerTemplate" type="x-tmpl-mustache">
+    <nav>
+      <ul class="pagination">
+        <li>
+          <a href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li><a class="page-entry" href="javascript:void(0)" data-page-no="1">1</a></li>        
+        <li><a class="page-entry" href="javascript:void(0)" data-page-no="2">2</a></li>
+        <li><a class="page-entry" href="javascript:void(0)" data-page-no="3">3</a></li>
+        <li>
+          <a href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+</script>
+
+<div class="container">
+    <h3>Ajaxified Pager</h3>
+    <br/>
+    <div id="holder"></div>
+    <div id="pager"></div>
+</div>
