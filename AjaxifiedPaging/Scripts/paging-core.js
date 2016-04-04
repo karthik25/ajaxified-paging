@@ -59,6 +59,23 @@ function renderTableData(options) {
 function renderPagerData(options) {
     var pagerTemplate = $('#pagerTemplate').html();
     Mustache.parse(pagerTemplate);
-    var rendered = Mustache.render(pagerTemplate);
+    var rendered = Mustache.render(pagerTemplate, {
+        FirstPage: 1,
+        LastPage: options.Paging.TotalPages,
+        Pages: createDataForPager(options)
+    });
     $('#pager').html(rendered);
+}
+
+function createDataForPager(options) {
+    var paging = options.Paging;
+    var pages = [];
+
+    for (var i = 1; i <= paging.TotalPages; i++) {
+        pages.push({
+           PageNumber: i 
+        });
+    }
+
+    return pages;
 }

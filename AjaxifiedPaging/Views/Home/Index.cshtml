@@ -41,15 +41,15 @@
     <nav>
       <ul class="pagination">
         <li>
-          <a href="#" aria-label="Previous">
+          <a class="page-entry" href="javascript:void(0)" data-page-no="{{FirstPage}}" aria-label="First Page">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li><a class="page-entry" href="javascript:void(0)" data-page-no="1">1</a></li>        
-        <li><a class="page-entry" href="javascript:void(0)" data-page-no="2">2</a></li>
-        <li><a class="page-entry" href="javascript:void(0)" data-page-no="3">3</a></li>
+        {{#Pages}}
+        <li><a class="page-entry" href="javascript:void(0)" data-page-no="{{PageNumber}}">{{PageNumber}}</a></li>
+        {{/Pages}}
         <li>
-          <a href="#" aria-label="Next">
+          <a class="page-entry" href="javascript:void(0)" data-page-no="{{LastPage}}" aria-label="Last Page">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
