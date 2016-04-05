@@ -1,7 +1,10 @@
-﻿// after success adjust the page url
-// like /c/manage/<page_no>
-$(function () {
+﻿$(function () {
     if ($('script[type="x-tmpl-mustache"]') && typeof (paging_options) === "object") {
+        var pageNo = "1";
+        if (window.location.hash) {
+            pageNo = window.location.hash.match(/\d+/g)[0];
+            paging_options.Paging.CurrentPage = parseInt(pageNo);
+        }
         $.ajax({
             type: 'post',
             url: paging_options.GetUrl,
@@ -10,11 +13,28 @@ $(function () {
             success: function (data) {
                 paging_options = data;
                 renderTableData(data);
-                renderPagerData(data, "1");
+                renderPagerData(data, pageNo);
                 setupPager();
             }
         });
     }    
+});
+
+$(window).on('hashchange', function () {
+    var pageNo = location.hash.slice(1).match(/\d+/g)[0];
+    paging_options.Paging.CurrentPage = parseInt(pageNo);
+    $.ajax({
+        type: 'post',
+        url: paging_options.GetUrl,
+        data: { 'pageContentRequest': JSON.stringify(paging_options) },
+        dataType: 'json',
+        success: function (data) {
+            paging_options = data;
+            renderTableData(data);
+            renderPagerData(data, pageNo);
+            setupPager();
+        }
+    });
 });
 
 function setupPager() {
@@ -33,6 +53,7 @@ function setupPager() {
                 renderTableData(data);
                 renderPagerData(data, pageNo);
                 setupPager();
+                window.location.hash = "!/" + pageNo;
             }
         });
     });
