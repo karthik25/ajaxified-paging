@@ -41,15 +41,15 @@
     <nav>
       <ul class="pagination">
         <li>
-          <a class="page-entry" href="javascript:void(0)" data-page-no="{{FirstPage}}" aria-label="First Page">
+          <a class="page-entry" href="javascript:void(0)" data-page-no="{{FirstPage}}" aria-label="First Page" title="Go to the first page">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
         {{#Pages}}
-        <li><a class="page-entry" href="javascript:void(0)" data-page-no="{{PageNumber}}">{{PageNumber}}</a></li>
+        <li class="{{PageItemClass}}"><a class="page-entry" href="javascript:void(0)" data-page-no="{{PageNumber}}">{{PageNumber}}</a></li>
         {{/Pages}}
         <li>
-          <a class="page-entry" href="javascript:void(0)" data-page-no="{{LastPage}}" aria-label="Last Page">
+          <a class="page-entry" href="javascript:void(0)" data-page-no="{{LastPage}}" aria-label="Last Page" title="Go to the last page">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -58,7 +58,7 @@
 </script>
 
 <div class="container">
-    <h3>Ajaxified Pager</h3>
+    <a href="@Url.Action("Index", "Home")"><h3>Ajaxified Pager</h3></a>
     <br/>
     <div id="holder"></div>
     <div id="pager"></div>

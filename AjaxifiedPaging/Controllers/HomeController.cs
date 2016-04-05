@@ -23,7 +23,7 @@ namespace AjaxifiedPaging.Controllers
 
         private List<Camp> GetEntries()
         {
-            var camps = Enumerable.Range(1, 25).Select(r => new Camp
+            var camps = Enumerable.Range(1, 65).Select(r => new Camp
                 {
                     CampId = r,
                     CampName = "Camp " + r,
