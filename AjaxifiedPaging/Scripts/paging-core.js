@@ -1,65 +1,4 @@
-﻿$(function () {
-    if ($('script[type="x-tmpl-mustache"]') && typeof (paging_options) === "object") {
-        var pageNo = "1";
-        if (window.location.hash) {
-            pageNo = window.location.hash.match(/\d+/g)[0];
-            paging_options.Paging.CurrentPage = parseInt(pageNo);
-        }
-        $.ajax({
-            type: 'post',
-            url: paging_options.GetUrl,
-            data: { 'pageContentRequest': JSON.stringify(paging_options) },
-            dataType: 'json',
-            success: function (data) {
-                paging_options = data;
-                renderTableData(data);
-                renderPagerData(data, pageNo);
-                setupPager();
-            }
-        });
-    }    
-});
-
-$(window).on('hashchange', function () {
-    var pageNo = location.hash.slice(1).match(/\d+/g)[0];
-    paging_options.Paging.CurrentPage = parseInt(pageNo);
-    $.ajax({
-        type: 'post',
-        url: paging_options.GetUrl,
-        data: { 'pageContentRequest': JSON.stringify(paging_options) },
-        dataType: 'json',
-        success: function (data) {
-            paging_options = data;
-            renderTableData(data);
-            renderPagerData(data, pageNo);
-            setupPager();
-        }
-    });
-});
-
-function setupPager() {
-    $('.page-entry').on('click', function (e) {
-        e.preventDefault();
-        var pageNo = $(this).data('page-no');
-        paging_options.Paging.CurrentPage = pageNo;
-        paging_options.Entries = [],
-        $.ajax({
-            type: 'post',
-            url: paging_options.GetUrl,
-            data: { 'pageContentRequest': JSON.stringify(paging_options) },
-            dataType: 'json',
-            success: function (data) {
-                paging_options = data;
-                renderTableData(data);
-                renderPagerData(data, pageNo);
-                setupPager();
-                window.location.hash = "!/" + pageNo;
-            }
-        });
-    });
-}
-
-function renderTableData(options) {
+﻿function renderTableData(options) {
     var template = $('#template').html();
     Mustache.parse(template);
     Mustache.Formatters = {
@@ -98,3 +37,52 @@ function createDataForPager(options, currentPageNo) {
 
     return pages;
 }
+
+function pagerCallback(data, pageNo) {
+    paging_options = data;
+    renderTableData(data);
+    renderPagerData(data, pageNo);
+    setupPager();
+    if (pageNo !== "1") {
+        window.location.hash = "!/" + pageNo;
+    }
+}
+
+function getPagingData(pagingOptions, callback, pageNo) {
+    $.ajax({
+        type: 'post',
+        url: pagingOptions.GetUrl,
+        data: { 'pageContentRequest': JSON.stringify(pagingOptions) },
+        dataType: 'json',
+        success: function (data) {
+            callback(data, pageNo);
+        }
+    });
+}
+
+function setupPager() {
+    $('.page-entry').on('click', function (e) {
+        e.preventDefault();
+        var pageNo = $(this).data('page-no');
+        paging_options.Paging.CurrentPage = pageNo;
+        paging_options.Entries = [],
+        getPagingData(paging_options, pagerCallback, pageNo);
+    });
+}
+
+$(function () {
+    if ($('script[type="x-tmpl-mustache"]') && typeof (paging_options) === "object") {
+        var pageNo = "1";
+        if (window.location.hash) {
+            pageNo = window.location.hash.match(/\d+/g)[0];
+            paging_options.Paging.CurrentPage = parseInt(pageNo);
+        }
+        getPagingData(paging_options, pagerCallback, pageNo);
+    }
+});
+
+$(window).on('hashchange', function () {
+    var pageNo = location.hash.slice(1).match(/\d+/g)[0];
+    paging_options.Paging.CurrentPage = parseInt(pageNo);
+    getPagingData(paging_options, pagerCallback, pageNo);
+});
