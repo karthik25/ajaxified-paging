@@ -82,7 +82,9 @@ $(function () {
 });
 
 $(window).on('hashchange', function () {
-    var pageNo = location.hash.slice(1).match(/\d+/g)[0];
-    paging_options.Paging.CurrentPage = parseInt(pageNo);
-    getPagingData(paging_options, pagerCallback, pageNo);
+    if ($('script[type="x-tmpl-mustache"]') && typeof(paging_options) === "object") {
+        var pageNo = location.hash.slice(1).match(/\d+/g)[0];
+        paging_options.Paging.CurrentPage = parseInt(pageNo);
+        getPagingData(paging_options, pagerCallback, pageNo);
+    }
 });
